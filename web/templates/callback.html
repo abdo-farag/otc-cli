@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudAstro SSO - Authentication</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',Tahoma,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+        .container{background:white;padding:50px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-width:600px;width:100%;text-align:center}
+        .spinner{border:6px solid #f3f3f3;border-top:6px solid #667eea;border-radius:50%;width:80px;height:80px;animation:spin 1s linear infinite;margin:30px auto}
+        @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        .icon{font-size:80px;margin:20px 0}
+        .success{color:#2ecc71}
+        .error{color:#e74c3c}
+        .timeout{color:#f39c12}
+        h2{margin:20px 0;font-size:28px;color:#333}
+        p{color:#666;margin:15px 0;line-height:1.6}
+        .message{font-size:16px;padding:20px;background:#f8f9fa;border-radius:10px;margin:20px 0}
+        .error-details{background:#fff3cd;padding:15px;border-radius:8px;margin:20px 0;font-size:14px;text-align:left}
+        .error-details ul{margin:10px 0 0 20px}
+        .footer{margin-top:40px;color:#999;font-size:12px}
+        .hidden{display:none!important}
+        .progress-bar{width:100%;height:4px;background:#f3f3f3;border-radius:2px;overflow:hidden;margin:20px 0}
+        .progress-fill{height:100%;background:linear-gradient(90deg,#667eea,#764ba2);animation:progress 2s ease-in-out infinite}
+        @keyframes progress{0%{width:0%}50%{width:70%}100%{width:100%}}
+        kbd{background:#f4f4f4;border:1px solid #ccc;border-radius:3px;padding:2px 6px;font-size:12px;font-family:monospace}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="loading">
+            <div class="spinner"></div>
+            <h2>Validating with OTC...</h2>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+            <p class="message">Please wait while we verify your organization access</p>
+            <p style="color:#999;font-size:12px" id="debug"></p>
+        </div>
+        <div id="success" class="hidden">
+            <div class="icon success">✓</div>
+            <h2 style="color:#2ecc71">Validation Successful!</h2>
+            <p id="success-message" class="message">All validations passed!</p>
+            <p id="close-hint" style="color:#999;font-size:14px">This window will close automatically in 5 seconds</p>
+        </div>
+        <div id="error" class="hidden">
+            <div class="icon error">✗</div>
+            <h2 style="color:#e74c3c">Validation Failed</h2>
+            <p id="error-message" class="message">Organization validation failed</p>
+            <div class="error-details">
+                <strong>Possible reasons:</strong>
+                <ul>
+                    <li>Wrong organization selected in Keycloak</li>
+                    <li>Organization doesn't have OTC access</li>
+                    <li>Identity mapping not configured</li>
+                </ul>
+            </div>
+        </div>
+        <div id="timeout" class="hidden">
+            <div class="icon timeout">⏱</div>
+            <h2 style="color:#f39c12">Check Your Terminal</h2>
+            <p class="message">Validation is taking longer than expected</p>
+            <p style="color:#999;font-size:14px">Please check your terminal for results</p>
+        </div>
+        <div class="footer">CloudAstro SSO • Press <kbd>Esc</kbd> to close</div>
+    </div>
+    <script>
+        const PORT={{.Port}};
+        let checkCount=0;
+        let countdownSeconds=5;
+        let statusCheckTimeout=null;
+        
+        function checkStatus(){
+            fetch('http://localhost:'+PORT+'/status', {
+                method: 'GET',
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                console.log('Status check:', data);
+                document.getElementById('debug').textContent = 'Status: ' + data.status + ' | Checks: ' + checkCount;
+                
+                if (data.status === 'success') {
+                    showSuccess(data.message);
+                } else if (data.status === 'failed') {
+                    showError(data.message);
+                } else if (checkCount < 120) {
+                    // Continue polling (2 minute timeout)
+                    checkCount++;
+                    statusCheckTimeout = setTimeout(checkStatus, 1000);
+                } else {
+                    // Timeout after 2 minutes
+                    showTimeout();
+                }
+            })
+            .catch(error => {
+                console.error('Status check error:', error);
+                if (checkCount < 120) {
+                    checkCount++;
+                    statusCheckTimeout = setTimeout(checkStatus, 1000);
+                } else {
+                    showTimeout();
+                }
+            });
+        }
+        
+        function showSuccess(msg){
+            if (statusCheckTimeout) clearTimeout(statusCheckTimeout);
+            
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('success').classList.remove('hidden');
+            document.getElementById('success-message').textContent = msg || 'All validations passed!';
+            
+            const hint = document.getElementById('close-hint');
+            let countdown = 5;
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    hint.textContent = 'This window will close automatically in ' + countdown + ' second' + (countdown !== 1 ? 's' : '');
+                } else {
+                    hint.textContent = 'Closing...';
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+            
+            // Auto-close after 5 seconds
+            setTimeout(() => {
+                window.location.href = 'http://localhost:'+PORT+'/close';
+            }, 5000);
+        }
+        
+        function showError(msg){
+            if (statusCheckTimeout) clearTimeout(statusCheckTimeout);
+            
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('error').classList.remove('hidden');
+            document.getElementById('error-message').textContent = msg || 'Organization validation failed';
+        }
+        
+        function showTimeout(){
+            if (statusCheckTimeout) clearTimeout(statusCheckTimeout);
+            
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('timeout').classList.remove('hidden');
+        }
+        
+        // Close on Escape key
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') window.close();
+        });
+        
+        // Start checking status after 1 second
+        console.log('Page loaded, starting status checks...');
+        setTimeout(checkStatus, 1000);
+    </script>
+</body>
+</html>

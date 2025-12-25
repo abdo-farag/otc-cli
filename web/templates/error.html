@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Validation Failed</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#e74c3c,#c0392b);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+        .container{background:#fff;padding:50px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:600px;text-align:center}
+        .icon{font-size:80px;color:#e74c3c;margin:20px 0}
+        h1{color:#e74c3c;margin:20px 0;font-size:32px}
+        .msg{color:#666;margin:20px 0;padding:15px;background:#f8f9fa;border-radius:8px}
+        .reasons{background:#fff3cd;padding:15px;border-radius:8px;margin:20px 0;font-size:14px;text-align:left}
+        .reasons ul{margin:10px 0 0 20px}
+        .footer{margin-top:30px;color:#999;font-size:12px}
+        kbd{background:#f4f4f4;border:1px solid #ccc;border-radius:3px;padding:2px 6px;font-size:11px;font-family:monospace}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">✗</div>
+        <h1>Validation Failed</h1>
+        <div class="msg">{{.ErrorDesc}}</div>
+        <div class="reasons">
+            <strong>Possible reasons:</strong>
+            <ul>
+                <li>Wrong organization selected in Keycloak</li>
+                <li>Organization doesn't have OTC access</li>
+                <li>Identity mapping not configured</li>
+            </ul>
+        </div>
+        <div class="footer">CloudAstro SSO • Press <kbd>Esc</kbd> to close</div>
+    </div>
+    <script>document.addEventListener('keydown',e=>{if(e.key==='Escape')window.close()})</script>
+</body>
+</html>
