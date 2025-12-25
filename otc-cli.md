@@ -25,6 +25,11 @@ otc-cli [command] [global flags] [command flags]
 * [otc-cli completion zsh](#otc-cli-completion-zsh)
 * [otc-cli docs](#otc-cli-docs)
 * [otc-cli help](#otc-cli-help)
+* [otc-cli list](#otc-cli-list)
+* [otc-cli list flavor](#otc-cli-list-flavor)
+* [otc-cli list help](#otc-cli-list-help)
+* [otc-cli list image](#otc-cli-list-image)
+* [otc-cli list projects](#otc-cli-list-projects)
 * [otc-cli login](#otc-cli-login)
 * [otc-cli logout](#otc-cli-logout)
 * [otc-cli version](#otc-cli-version)
@@ -211,6 +216,82 @@ otc-cli help [command] [flags]
 
 ```text
   -h, --help   help for help
+```
+
+## `otc-cli list`
+
+List OTC resources such as servers, VPCs, volumes, and more.
+
+```text
+otc-cli list [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for list
+```
+
+## `otc-cli list flavor`
+
+List server flavors with pricing
+
+```text
+otc-cli list flavor [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help        help for flavor
+  -o, --os string   OS type for pricing (openlinux, redhat, oracle, windows) (default "openlinux")
+```
+
+## `otc-cli list help`
+
+Help provides help for any command in the application.
+Simply type list help [path to command] for full details.
+
+```text
+otc-cli list help [command] [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for help
+```
+
+## `otc-cli list image`
+
+List system and custom images
+
+```text
+otc-cli list image [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help                help for image
+      --name string         Filter by image name (partial match)
+      --platform string     Filter by platform (Ubuntu, CentOS, Windows, etc.)
+      --status string       Filter by status (active, queued, etc.)
+      --visibility string   Filter by visibility (private, public, shared)
+```
+
+## `otc-cli list projects`
+
+List OTC projects
+
+```text
+otc-cli list projects [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for projects
 ```
 
 ## `otc-cli login`
