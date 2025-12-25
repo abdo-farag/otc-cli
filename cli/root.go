@@ -39,6 +39,7 @@ func init() {
 	// Add subcommands
 	rootCmd.AddCommand(loginCmd)
 	rootCmd.AddCommand(logoutCmd)
+	rootCmd.AddCommand(docsCmd)
 	rootCmd.AddCommand(versionCmd)
 }
 
