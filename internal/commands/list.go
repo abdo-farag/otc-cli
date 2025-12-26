@@ -16,6 +16,16 @@ func ListCommand(cfg *config.Config, client *otc.Client, unscopedToken, resource
 	switch resourceType {
 	case "projects":
 		listProjects(cfg, client, unscopedToken, raw)
+	case "ecs", "server", "instance", "servers", "instances":
+		resource.ListECS(cfg, client, unscopedToken, projectID, options, raw)
+	case "vpc", "vpcs":
+		resource.ListVPC(cfg, client, unscopedToken, projectID, raw)
+	case "subnet", "subnets":
+		resource.ListSubnet(cfg, client, unscopedToken, projectID, raw)
+	case "volume", "volumes":
+		resource.ListVolume(cfg, client, unscopedToken, projectID, raw)
+	case "cce", "cluster", "clusters":
+		resource.ListCCE(cfg, client, unscopedToken, projectID, raw)
 	case "image", "images":
 		resource.ListImages(cfg, client, unscopedToken, projectID, options, raw)
 	case "keypair", "keypairs":

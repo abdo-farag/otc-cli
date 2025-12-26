@@ -26,12 +26,19 @@ otc-cli [command] [global flags] [command flags]
 * [otc-cli docs](#otc-cli-docs)
 * [otc-cli help](#otc-cli-help)
 * [otc-cli list](#otc-cli-list)
+* [otc-cli list cce](#otc-cli-list-cce)
+* [otc-cli list ecs](#otc-cli-list-ecs)
 * [otc-cli list flavor](#otc-cli-list-flavor)
 * [otc-cli list help](#otc-cli-list-help)
 * [otc-cli list image](#otc-cli-list-image)
+* [otc-cli list keypair](#otc-cli-list-keypair)
 * [otc-cli list projects](#otc-cli-list-projects)
+* [otc-cli list subnet](#otc-cli-list-subnet)
+* [otc-cli list volume](#otc-cli-list-volume)
+* [otc-cli list vpc](#otc-cli-list-vpc)
 * [otc-cli login](#otc-cli-login)
 * [otc-cli logout](#otc-cli-logout)
+* [otc-cli version](#otc-cli-version)
 * [otc-cli version](#otc-cli-version)
 
 # Commands
@@ -232,6 +239,38 @@ otc-cli list [flags]
   -h, --help   help for list
 ```
 
+## `otc-cli list cce`
+
+List Kubernetes clusters
+
+```text
+otc-cli list cce [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for cce
+```
+
+## `otc-cli list ecs`
+
+List Elastic Cloud Servers
+
+```text
+otc-cli list ecs [flags]
+```
+
+### Command Flags
+
+```text
+      --az string       Filter by availability zone (e.g., eu-de-01)
+  -h, --help            help for ecs
+      --name string     Filter by server name (partial match)
+      --status string   Filter by status (ACTIVE, SHUTOFF, etc.)
+      --tag string      Filter by tag (key=value)
+```
+
 ## `otc-cli list flavor`
 
 List server flavors with pricing
@@ -280,6 +319,20 @@ otc-cli list image [flags]
       --visibility string   Filter by visibility (private, public, shared)
 ```
 
+## `otc-cli list keypair`
+
+List SSH keypairs
+
+```text
+otc-cli list keypair [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for keypair
+```
+
 ## `otc-cli list projects`
 
 List OTC projects
@@ -292,6 +345,48 @@ otc-cli list projects [flags]
 
 ```text
   -h, --help   help for projects
+```
+
+## `otc-cli list subnet`
+
+List VPC subnets
+
+```text
+otc-cli list subnet [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for subnet
+```
+
+## `otc-cli list volume`
+
+List volumes
+
+```text
+otc-cli list volume [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for volume
+```
+
+## `otc-cli list vpc`
+
+List Virtual Private Clouds
+
+```text
+otc-cli list vpc [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for vpc
 ```
 
 ## `otc-cli login`
@@ -340,6 +435,20 @@ otc-cli logout [flags]
 
 ```text
   -h, --help   help for logout
+```
+
+## `otc-cli version`
+
+Print the version number
+
+```text
+otc-cli version [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for version
 ```
 
 ## `otc-cli version`
