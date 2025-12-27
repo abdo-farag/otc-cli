@@ -71,3 +71,30 @@ func ListCCE(cfg *config.Config, client *otc.Client, unscopedToken, projectID st
 	tbl.Print()
 	fmt.Printf("\nTotal: %d clusters\n", len(result.Clusters))
 }
+
+// GetCCE gets a specific CCE cluster
+func GetCCE(cfg *config.Config, client *otc.Client, unscopedToken, projectID, resourceID string, raw bool) {
+	projectID, projectToken, err := GetProjectToken(cfg, client, unscopedToken, projectID, raw)
+	if err != nil {
+		color.Red("✗ %v", err)
+		return
+	}
+
+	cceURL := fmt.Sprintf("https://cce.%s.otc.t-systems.com/api/v3/projects/%s/clusters/%s", cfg.Region, projectID, resourceID)
+
+	body, statusCode, err := MakeRequest(cceURL, projectToken)
+	if err != nil {
+		color.Red("✗ Request failed: %v", err)
+		return
+	}
+
+	if statusCode != 200 {
+		color.Red("✗ API error (status %d): %s", statusCode, string(body))
+		return
+	}
+
+	var prettyJSON map[string]interface{}
+	json.Unmarshal(body, &prettyJSON)
+	formatted, _ := json.MarshalIndent(prettyJSON, "", "  ")
+	fmt.Println(string(formatted))
+}

@@ -10,7 +10,9 @@ import (
 
   "github.com/fatih/color"
   "github.com/rodaine/table"
-
+	
+	golangsdk "github.com/opentelekomcloud/gophertelekomcloud"
+	"github.com/opentelekomcloud/gophertelekomcloud/openstack"
   "github.com/opentelekomcloud/gophertelekomcloud/openstack/ecs/v1/cloudservers"
 )
 
@@ -187,4 +189,51 @@ func displayServersTable(servers []cloudservers.CloudServer, projectID string, o
 
   tbl.Print()
   fmt.Printf("\nTotal: %d instances\n", len(servers))
+}
+
+// GetECS gets a specific ECS instance using SDK
+func GetECS(cfg *config.Config, client *otc.Client, unscopedToken, projectID, resourceID string, raw bool) {
+	projectID, projectToken, err := GetProjectToken(cfg, client, unscopedToken, projectID, raw)
+	if err != nil {
+		color.Red("✗ %v", err)
+		return
+	}
+
+	// Create authenticated client
+	authOpts := golangsdk.AuthOptions{
+		IdentityEndpoint: cfg.AUTHURL,
+		TokenID:          projectToken,
+		TenantID:         projectID,
+	}
+
+	provider, err := openstack.AuthenticatedClient(authOpts)
+	if err != nil {
+		color.Red("✗ Failed to create authenticated client: %v", err)
+		return
+	}
+
+	// Create ECS client
+	ecsClient, err := openstack.NewComputeV1(provider, golangsdk.EndpointOpts{
+		Region: cfg.Region,
+	})
+	if err != nil {
+		color.Red("✗ Failed to create ECS client: %v", err)
+		return
+	}
+
+	// Use SDK's Get method
+	server, err := cloudservers.Get(ecsClient, resourceID).Extract()
+	if err != nil {
+		color.Red("✗ Failed to get server: %v", err)
+		return
+	}
+
+	// Output as JSON
+	jsonData, err := json.MarshalIndent(server, "", "  ")
+	if err != nil {
+		color.Red("✗ Failed to format output: %v", err)
+		return
+	}
+
+	fmt.Println(string(jsonData))
 }

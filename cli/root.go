@@ -41,7 +41,7 @@ func init() {
 	rootCmd.AddCommand(logoutCmd)
 	rootCmd.AddCommand(docsCmd)
 	rootCmd.AddCommand(listCmd)
-	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(getCmd)
 	rootCmd.AddCommand(versionCmd)
 }
 

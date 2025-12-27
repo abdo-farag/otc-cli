@@ -14,8 +14,8 @@ func ListCommand(cfg *config.Config, client *otc.Client, unscopedToken, resource
 		osType = "openlinux"
 	}
 	switch resourceType {
-	case "projects":
-		listProjects(cfg, client, unscopedToken, raw)
+	case "project", "projects", "p":
+		resource.ListProjects(cfg, client, unscopedToken, raw)
 	case "ecs", "server", "instance", "servers", "instances":
 		resource.ListECS(cfg, client, unscopedToken, projectID, options, raw)
 	case "vpc", "vpcs":

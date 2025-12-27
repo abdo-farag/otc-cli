@@ -79,7 +79,7 @@ var listImageCmd = &cobra.Command{
 
 var listProjectsCmd = &cobra.Command{
   Use:     "projects",
-  Aliases: []string{"project"},
+  Aliases: []string{"project", "p"},
   Short:   "List OTC projects",
   Args:    cobra.NoArgs,
   RunE:    runListProjects,
@@ -98,7 +98,7 @@ var listEcsCmd = &cobra.Command{
 
 var listKeypairCmd = &cobra.Command{
   Use:     "keypair",
-  Aliases: []string{"keypairs", "key"},
+  Aliases: []string{"keypairs", "key", "ssh", "ssh-key"},
   Short:   "List SSH keypairs",
   Args:    cobra.NoArgs,
   Example: `  otc-cli list keypair

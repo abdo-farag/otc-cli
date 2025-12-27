@@ -1,4 +1,4 @@
-package commands
+package resource
 
 import (
 	"encoding/json"
@@ -11,7 +11,7 @@ import (
 )
 
 // listProjects lists all OTC projects
-func listProjects(cfg *config.Config, client *otc.Client, unscopedToken string, raw bool) {
+func ListProjects(cfg *config.Config, client *otc.Client, unscopedToken string, raw bool) {
 	domainToken, err := client.GetDomainScopedToken(unscopedToken)
 	if err != nil {
 		color.Red("✗ Failed to get domain token: %v", err)

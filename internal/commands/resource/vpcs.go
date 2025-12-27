@@ -63,3 +63,30 @@ func ListVPC(cfg *config.Config, client *otc.Client, unscopedToken, projectID st
 	tbl.Print()
 	fmt.Printf("\nTotal: %d VPCs\n", len(result.VPCs))
 }
+
+// GetVPC gets a specific VPC
+func GetVPC(cfg *config.Config, client *otc.Client, unscopedToken, projectID, resourceID string, raw bool) {
+	projectID, projectToken, err := GetProjectToken(cfg, client, unscopedToken, projectID, raw)
+	if err != nil {
+		color.Red("✗ %v", err)
+		return
+	}
+
+	vpcURL := fmt.Sprintf("https://vpc.%s.otc.t-systems.com/v1/%s/vpcs/%s", cfg.Region, projectID, resourceID)
+
+	body, statusCode, err := MakeRequest(vpcURL, projectToken)
+	if err != nil {
+		color.Red("✗ Request failed: %v", err)
+		return
+	}
+
+	if statusCode != 200 {
+		color.Red("✗ API error (status %d): %s", statusCode, string(body))
+		return
+	}
+
+	var prettyJSON map[string]interface{}
+	json.Unmarshal(body, &prettyJSON)
+	formatted, _ := json.MarshalIndent(prettyJSON, "", "  ")
+	fmt.Println(string(formatted))
+}

@@ -24,6 +24,14 @@ otc-cli [command] [global flags] [command flags]
 * [otc-cli completion powershell](#otc-cli-completion-powershell)
 * [otc-cli completion zsh](#otc-cli-completion-zsh)
 * [otc-cli docs](#otc-cli-docs)
+* [otc-cli get](#otc-cli-get)
+* [otc-cli get cce](#otc-cli-get-cce)
+* [otc-cli get ecs](#otc-cli-get-ecs)
+* [otc-cli get help](#otc-cli-get-help)
+* [otc-cli get kubeconfig](#otc-cli-get-kubeconfig)
+* [otc-cli get subnet](#otc-cli-get-subnet)
+* [otc-cli get volume](#otc-cli-get-volume)
+* [otc-cli get vpc](#otc-cli-get-vpc)
 * [otc-cli help](#otc-cli-help)
 * [otc-cli list](#otc-cli-list)
 * [otc-cli list cce](#otc-cli-list-cce)
@@ -38,7 +46,6 @@ otc-cli [command] [global flags] [command flags]
 * [otc-cli list vpc](#otc-cli-list-vpc)
 * [otc-cli login](#otc-cli-login)
 * [otc-cli logout](#otc-cli-logout)
-* [otc-cli version](#otc-cli-version)
 * [otc-cli version](#otc-cli-version)
 
 # Commands
@@ -208,6 +215,120 @@ otc-cli docs [flags]
 ```text
   -h, --help            help for docs
   -o, --output string   Output file path (default "otc-cli.md")
+```
+
+## `otc-cli get`
+
+Get detailed information about a specific OTC resource.
+
+```text
+otc-cli get [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for get
+```
+
+## `otc-cli get cce`
+
+Get CCE cluster details
+
+```text
+otc-cli get cce [cluster-id-or-name] [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for cce
+```
+
+## `otc-cli get ecs`
+
+Get ECS instance details
+
+```text
+otc-cli get ecs [server-id-or-name] [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for ecs
+```
+
+## `otc-cli get help`
+
+Help provides help for any command in the application.
+Simply type get help [path to command] for full details.
+
+```text
+otc-cli get help [command] [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for help
+```
+
+## `otc-cli get kubeconfig`
+
+Download kubeconfig for CCE cluster
+
+```text
+otc-cli get kubeconfig [cluster-id-or-name] [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help            help for kubeconfig
+  -o, --output string   Output path for kubeconfig file (default "./kubeconfig")
+```
+
+## `otc-cli get subnet`
+
+Get subnet details
+
+```text
+otc-cli get subnet [subnet-id-or-name] [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for subnet
+```
+
+## `otc-cli get volume`
+
+Get volume details
+
+```text
+otc-cli get volume [volume-id-or-name] [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for volume
+```
+
+## `otc-cli get vpc`
+
+Get VPC details
+
+```text
+otc-cli get vpc [vpc-id-or-name] [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for vpc
 ```
 
 ## `otc-cli help`
@@ -435,20 +556,6 @@ otc-cli logout [flags]
 
 ```text
   -h, --help   help for logout
-```
-
-## `otc-cli version`
-
-Print the version number
-
-```text
-otc-cli version [flags]
-```
-
-### Command Flags
-
-```text
-  -h, --help   help for version
 ```
 
 ## `otc-cli version`
