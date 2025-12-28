@@ -47,6 +47,7 @@ otc-cli [command] [global flags] [command flags]
 * [otc-cli login](#otc-cli-login)
 * [otc-cli logout](#otc-cli-logout)
 * [otc-cli version](#otc-cli-version)
+* [otc-cli version](#otc-cli-version)
 
 # Commands
 
@@ -556,6 +557,20 @@ otc-cli logout [flags]
 
 ```text
   -h, --help   help for logout
+```
+
+## `otc-cli version`
+
+Print the version number
+
+```text
+otc-cli version [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for version
 ```
 
 ## `otc-cli version`

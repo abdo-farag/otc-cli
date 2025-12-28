@@ -42,6 +42,7 @@ func init() {
 	rootCmd.AddCommand(docsCmd)
 	rootCmd.AddCommand(listCmd)
 	rootCmd.AddCommand(getCmd)
+	rootCmd.AddCommand(consoleCmd)
 	rootCmd.AddCommand(versionCmd)
 }
 
