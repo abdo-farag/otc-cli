@@ -23,6 +23,9 @@ otc-cli [command] [global flags] [command flags]
 * [otc-cli completion help](#otc-cli-completion-help)
 * [otc-cli completion powershell](#otc-cli-completion-powershell)
 * [otc-cli completion zsh](#otc-cli-completion-zsh)
+* [otc-cli console](#otc-cli-console)
+* [otc-cli console ecs](#otc-cli-console-ecs)
+* [otc-cli console help](#otc-cli-console-help)
 * [otc-cli docs](#otc-cli-docs)
 * [otc-cli get](#otc-cli-get)
 * [otc-cli get cce](#otc-cli-get-cce)
@@ -46,7 +49,6 @@ otc-cli [command] [global flags] [command flags]
 * [otc-cli list vpc](#otc-cli-list-vpc)
 * [otc-cli login](#otc-cli-login)
 * [otc-cli logout](#otc-cli-logout)
-* [otc-cli version](#otc-cli-version)
 * [otc-cli version](#otc-cli-version)
 
 # Commands
@@ -201,6 +203,50 @@ otc-cli completion zsh [flags]
 ```text
   -h, --help              help for zsh
       --no-descriptions   disable completion descriptions
+```
+
+## `otc-cli console`
+
+Get VNC console URLs for accessing ECS instances remotely and open in browser.
+
+```text
+otc-cli console [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for console
+```
+
+## `otc-cli console ecs`
+
+Open VNC console for an ECS instance
+
+```text
+otc-cli console ecs [server-name-or-id] [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help         help for ecs
+      --no-browser   Don't open browser automatically
+```
+
+## `otc-cli console help`
+
+Help provides help for any command in the application.
+Simply type console help [path to command] for full details.
+
+```text
+otc-cli console help [command] [flags]
+```
+
+### Command Flags
+
+```text
+  -h, --help   help for help
 ```
 
 ## `otc-cli docs`
@@ -557,20 +603,6 @@ otc-cli logout [flags]
 
 ```text
   -h, --help   help for logout
-```
-
-## `otc-cli version`
-
-Print the version number
-
-```text
-otc-cli version [flags]
-```
-
-### Command Flags
-
-```text
-  -h, --help   help for version
 ```
 
 ## `otc-cli version`
