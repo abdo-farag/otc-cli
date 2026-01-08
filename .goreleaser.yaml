@@ -85,7 +85,7 @@ release:
     
     ### Using Go Install
     ```bash
-    go install github.com/abdo-farag/otc-cli@{{ .Tag }}
+    go install github.com/abdo-farag/otc-cli/cmd/otc-cli@{{ .Tag }}
     ```
     
     ### Manual Installation
