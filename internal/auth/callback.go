@@ -57,12 +57,47 @@ func (h *CallbackHandler) handleCallback(w http.ResponseWriter, r *http.Request)
 		h.errorDesc = q.Get("error_description")
 		h.mu.Unlock()
 
-		// Render error page
+		// Return inline error HTML (no template needed for OAuth errors)
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		h.templates.ExecuteTemplate(w, "error.html", map[string]string{
-			"ErrorType": errParam,
-			"ErrorDesc": h.errorDesc,
-		})
+		errorHTML := fmt.Sprintf(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OAuth Error - OTC SSO</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#e74c3c,#c0392b);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+        .box{background:#fff;padding:50px;border-radius:20px;text-align:center;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:slideUp 0.4s ease-out}
+        @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .icon{font-size:70px;color:#e74c3c;margin-bottom:20px}
+        h1{color:#e74c3c;margin-bottom:20px;font-size:28px;font-weight:600}
+        .error-code{background:#ffebee;color:#c62828;padding:8px 16px;border-radius:6px;display:inline-block;margin:10px 0;font-family:monospace;font-size:14px}
+        p{color:#666;margin:15px 0;line-height:1.6}
+        .close-hint{background:#f0f0f0;padding:15px;border-radius:8px;margin-top:30px;border:2px dashed #999}
+        kbd{background:#f4f4f4;border:1px solid #ccc;padding:3px 7px;border-radius:3px;font-family:monospace;font-size:12px}
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="icon">✗</div>
+        <h1>OAuth Authentication Error</h1>
+        <div class="error-code">%s</div>
+        <p>%s</p>
+        <div class="close-hint">
+            <p style="margin:0;color:#666;font-size:14px">Close this tab: <kbd>Ctrl+W</kbd> or <kbd>Cmd+W</kbd></p>
+        </div>
+    </div>
+    <script>
+        // Attempt to close window
+        window.addEventListener('load', function() {
+            window.close();
+        });
+    </script>
+</body>
+</html>`, errParam, h.errorDesc)
+
+		fmt.Fprint(w, errorHTML)
 
 		// Send error to channel
 		select {
@@ -77,10 +112,44 @@ func (h *CallbackHandler) handleCallback(w http.ResponseWriter, r *http.Request)
 	if code == "" {
 		// Missing code error
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		h.templates.ExecuteTemplate(w, "error.html", map[string]string{
-			"ErrorType": "missing_code",
-			"ErrorDesc": "No authorization code received",
-		})
+		errorHTML := `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OAuth Error - OTC SSO</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#e74c3c,#c0392b);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+        .box{background:#fff;padding:50px;border-radius:20px;text-align:center;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:slideUp 0.4s ease-out}
+        @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .icon{font-size:70px;color:#e74c3c;margin-bottom:20px}
+        h1{color:#e74c3c;margin-bottom:20px;font-size:28px;font-weight:600}
+        .error-code{background:#ffebee;color:#c62828;padding:8px 16px;border-radius:6px;display:inline-block;margin:10px 0;font-family:monospace;font-size:14px}
+        p{color:#666;margin:15px 0;line-height:1.6}
+        .close-hint{background:#f0f0f0;padding:15px;border-radius:8px;margin-top:30px;border:2px dashed #999}
+        kbd{background:#f4f4f4;border:1px solid #ccc;padding:3px 7px;border-radius:3px;font-family:monospace;font-size:12px}
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="icon">✗</div>
+        <h1>OAuth Authentication Error</h1>
+        <div class="error-code">missing_code</div>
+        <p>No authorization code received from the identity provider</p>
+        <div class="close-hint">
+            <p style="margin:0;color:#666;font-size:14px">Close this tab: <kbd>Ctrl+W</kbd> or <kbd>Cmd+W</kbd></p>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('load', function() {
+            window.close();
+        });
+    </script>
+</body>
+</html>`
+
+		fmt.Fprint(w, errorHTML)
 
 		select {
 		case h.errorChan <- "missing_code":
@@ -97,7 +166,7 @@ func (h *CallbackHandler) handleCallback(w http.ResponseWriter, r *http.Request)
 
 	// Render success callback page
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	h.templates.ExecuteTemplate(w, "callback.html", map[string]int{"Port": h.port})
+	h.templates.ExecuteTemplate(w, "callback.html", map[string]interface{}{"Port": h.port})
 
 	// Send code to channel
 	select {
@@ -121,7 +190,46 @@ func (h *CallbackHandler) handleStatus(w http.ResponseWriter, r *http.Request) {
 
 func (h *CallbackHandler) handleClose(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	fmt.Fprint(w, `<!DOCTYPE html><html><head><title>Complete</title><style>*{margin:0;padding:0}body{font-family:Arial;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;display:flex;align-items:center;justify-content:center}.box{background:#fff;padding:50px;border-radius:20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}.icon{font-size:80px;color:#2ecc71;margin:20px 0}h1{color:#2ecc71;margin:20px 0}p{color:#666;margin:15px 0}button{margin-top:20px;padding:12px 30px;background:#667eea;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:16px;font-weight:600}button:hover{background:#5568d3;transform:translateY(-2px)}</style></head><body><div class="box"><div class="icon">✓</div><h1>Authentication Complete!</h1><p>Your credentials are ready.</p><p style="font-size:14px">Return to your terminal to continue.</p><button onclick="window.close()">Close Window</button></div><script>window.close();setTimeout(()=>{window.open('','_self');window.close()},100);setTimeout(()=>{if(document.querySelector('.box')){document.querySelector('p:last-of-type').innerHTML='Press <strong>Cmd+W</strong> or <strong>Ctrl+W</strong> to close'}},500)</script></body></html>`)
+	fmt.Fprint(w, `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Complete - OTC SSO</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+        .box{background:#fff;padding:50px;border-radius:20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-width:500px;animation:slideUp 0.4s ease-out}
+        @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .icon{font-size:80px;color:#2ecc71;margin:20px 0;animation:iconPop 0.5s ease-out}
+        @keyframes iconPop{0%{transform:scale(0)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+        h1{color:#2ecc71;margin:20px 0;font-size:28px;font-weight:600}
+        p{color:#666;margin:15px 0;line-height:1.6}
+        .close-hint{background:#f8f9fa;padding:20px;border-radius:10px;margin-top:20px;border:2px dashed #999}
+        kbd{background:#f4f4f4;border:1px solid #ccc;border-radius:3px;padding:3px 7px;font-family:monospace;font-size:12px;box-shadow:0 1px 2px rgba(0,0,0,0.1)}
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="icon">✓</div>
+        <h1>Authentication Complete!</h1>
+        <p>Your credentials are ready.</p>
+        <p style="font-size:14px;color:#999">Return to your terminal to continue.</p>
+        <div class="close-hint">
+            <p style="margin:0;color:#666;font-size:14px">Close this tab: <kbd>Ctrl+W</kbd> or <kbd>Cmd+W</kbd></p>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('load', function() {
+            window.close();
+            setTimeout(function() {
+                window.open('', '_self');
+                window.close();
+            }, 100);
+        });
+    </script>
+</body>
+</html>`)
 }
 
 // SetValidationStatus updates the validation status shown in the browser

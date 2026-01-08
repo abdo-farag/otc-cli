@@ -11,7 +11,7 @@ import (
 
 	"github.com/abdo-farag/otc-cli/internal/config"
 	"github.com/abdo-farag/otc-cli/web"
-	
+
 	"github.com/fatih/color"
 	"github.com/pkg/browser"
 )

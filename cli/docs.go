@@ -18,7 +18,7 @@ var docsCmd = &cobra.Command{
 
   # Generate with custom output file
   otc-cli docs --output ./documentation/otc-cli.md`,
-	RunE:   runDocs,
+	RunE: runDocs,
 }
 
 var docsOutput string
@@ -29,7 +29,7 @@ func init() {
 
 func runDocs(cmd *cobra.Command, args []string) error {
 	buf := bytes.NewBufferString("")
-	
+
 	// Generate markdown documentation
 	if err := cobradoc.WriteDocument(buf, rootCmd, cobradoc.Markdown, cobradoc.Options{}); err != nil {
 		return err

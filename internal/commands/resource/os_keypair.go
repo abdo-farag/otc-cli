@@ -18,8 +18,8 @@ func ListKeypairs(cfg *config.Config, client *otc.Client, unscopedToken, project
 		return
 	}
 
-	// Keypairs endpoint - includes project ID
-	keypairURL := fmt.Sprintf("https://ecs.%s.otc.t-systems.com/v2.1/%s/os-keypairs", cfg.Region, projectID)
+	// Keypairs endpoint - using centralized ECS endpoint
+	keypairURL := fmt.Sprintf("%s/v2.1/%s/os-keypairs", cfg.Endpoints.ECS, projectID)
 
 	body, statusCode, err := MakeRequest(keypairURL, projectToken)
 	if err != nil {
@@ -40,33 +40,33 @@ func ListKeypairs(cfg *config.Config, client *otc.Client, unscopedToken, project
 		return
 	}
 
-var result struct {
-  Keypairs []struct {
-    Keypair struct {
-      Name        string `json:"name"`
-      Fingerprint string `json:"fingerprint"`
-      PublicKey   string `json:"public_key"`
-    } `json:"keypair"`
-  } `json:"keypairs"`
-}
+	var result struct {
+		Keypairs []struct {
+			Keypair struct {
+				Name        string `json:"name"`
+				Fingerprint string `json:"fingerprint"`
+				PublicKey   string `json:"public_key"`
+			} `json:"keypair"`
+		} `json:"keypairs"`
+	}
 
-if err := json.Unmarshal(body, &result); err != nil {
-  color.Red("✗ Failed to parse response: %v", err)
-  return
-}
+	if err := json.Unmarshal(body, &result); err != nil {
+		color.Red("✗ Failed to parse response: %v", err)
+		return
+	}
 
-if len(result.Keypairs) == 0 {
-  color.Cyan("No keypairs found")
-  return
-}
+	if len(result.Keypairs) == 0 {
+		color.Cyan("No keypairs found")
+		return
+	}
 
-headerFmt := color.New(color.FgCyan, color.Bold).SprintfFunc()
-tbl := table.New("Name", "Fingerprint")
-tbl.WithHeaderFormatter(headerFmt)
+	headerFmt := color.New(color.FgCyan, color.Bold).SprintfFunc()
+	tbl := table.New("Name", "Fingerprint")
+	tbl.WithHeaderFormatter(headerFmt)
 
-for _, item := range result.Keypairs {
-  tbl.AddRow(item.Keypair.Name, item.Keypair.Fingerprint)
-}
+	for _, item := range result.Keypairs {
+		tbl.AddRow(item.Keypair.Name, item.Keypair.Fingerprint)
+	}
 
 	fmt.Printf("\n")
 	color.Cyan("Available Keypairs")

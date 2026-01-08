@@ -18,7 +18,7 @@ func ListVolume(cfg *config.Config, client *otc.Client, unscopedToken, projectID
 		return
 	}
 
-	volumeURL := fmt.Sprintf("https://evs.%s.otc.t-systems.com/v2/%s/volumes/detail", cfg.Region, projectID)
+	volumeURL := fmt.Sprintf("%s/v2/%s/volumes/detail", cfg.Endpoints.EVS, projectID)
 
 	body, statusCode, err := MakeRequest(volumeURL, projectToken)
 	if err != nil {
@@ -84,7 +84,7 @@ func GetVolume(cfg *config.Config, client *otc.Client, unscopedToken, projectID,
 		return
 	}
 
-	volumeURL := fmt.Sprintf("https://evs.%s.otc.t-systems.com/v2/%s/volumes/%s", cfg.Region, projectID, resourceID)
+	volumeURL := fmt.Sprintf("%s/v2/%s/volumes/%s", cfg.Endpoints.EVS, projectID, resourceID)
 
 	body, statusCode, err := MakeRequest(volumeURL, projectToken)
 	if err != nil {

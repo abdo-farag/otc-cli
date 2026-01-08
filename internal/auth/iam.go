@@ -32,8 +32,9 @@ func (ic *IAMClient) GetIAMToken(username, password string) (string, error) {
 		return "", fmt.Errorf("OS_DOMAIN_NAME or --domain-name is not configured")
 	}
 
-	if ic.cfg.AUTHURL == "" {
-		return "", fmt.Errorf("AUTH_URL or --auth-url is not configured")
+	// Use centralized IAM endpoint
+	if ic.cfg.Endpoints == nil || ic.cfg.Endpoints.IAM == "" {
+		return "", fmt.Errorf("IAM endpoint is not configured")
 	}
 
 	// Build auth options for OTC IAM
@@ -41,7 +42,7 @@ func (ic *IAMClient) GetIAMToken(username, password string) (string, error) {
 		DomainName:       ic.cfg.DomainName,
 		Username:         username,
 		Password:         password,
-		IdentityEndpoint: ic.cfg.AUTHURL,
+		IdentityEndpoint: ic.cfg.Endpoints.IAM,
 	}
 
 	// Get authenticated provider
@@ -78,13 +79,14 @@ func (ic *IAMClient) GetScopedToken(unscopedToken string, projectID string) (str
 		return "", fmt.Errorf("project ID is required")
 	}
 
-	if ic.cfg.AUTHURL == "" {
-		return "", fmt.Errorf("AUTH_URL is not configured")
+	// Use centralized IAM endpoint
+	if ic.cfg.Endpoints == nil || ic.cfg.Endpoints.IAM == "" {
+		return "", fmt.Errorf("IAM endpoint is not configured")
 	}
 
 	// Build auth options using token ID and project
 	authOpts := golangsdk.AuthOptions{
-		IdentityEndpoint: ic.cfg.AUTHURL,
+		IdentityEndpoint: ic.cfg.Endpoints.IAM,
 		TokenID:          unscopedToken,
 		TenantID:         projectID,
 	}
@@ -119,13 +121,14 @@ func (ic *IAMClient) RefreshIAMToken(token string) (bool, error) {
 		return false, fmt.Errorf("token is required")
 	}
 
-	if ic.cfg.AUTHURL == "" {
-		return false, fmt.Errorf("AUTH_URL is not configured")
+	// Use centralized IAM endpoint
+	if ic.cfg.Endpoints == nil || ic.cfg.Endpoints.IAM == "" {
+		return false, fmt.Errorf("IAM endpoint is not configured")
 	}
 
 	// Try to use the token - if it's valid, the call succeeds
 	authOpts := golangsdk.AuthOptions{
-		IdentityEndpoint: ic.cfg.AUTHURL,
+		IdentityEndpoint: ic.cfg.Endpoints.IAM,
 		TokenID:          token,
 	}
 

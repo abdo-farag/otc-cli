@@ -20,13 +20,13 @@ func GetCommand(cfg *config.Config, client *otc.Client, unscopedToken, resourceT
 		resource.GetVolume(cfg, client, unscopedToken, projectID, resourceID, raw)
 	case "cce", "cluster", "clusters":
 		resource.GetCCE(cfg, client, unscopedToken, projectID, resourceID, raw)
- case "kubeconfig":
-    // Get output path from options
-    outputPath := "~/.kube"
-    if path, ok := options["output"].(string); ok && path != "" {
-      outputPath = path
-    }
-    resource.GetKubeconfig(cfg, client, unscopedToken, projectID, resourceID, outputPath)
+	case "kubeconfig":
+		// Get output path from options
+		outputPath := "~/.kube"
+		if path, ok := options["output"].(string); ok && path != "" {
+			outputPath = path
+		}
+		resource.GetKubeconfig(cfg, client, unscopedToken, projectID, resourceID, outputPath)
 	default:
 		return fmt.Errorf("unknown resource type: %s", resourceType)
 	}

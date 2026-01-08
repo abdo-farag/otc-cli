@@ -54,25 +54,24 @@ IAM Authentication (--iam flag):
 }
 
 func init() {
-  // OIDC flags - use empty defaults
-  loginCmd.Flags().StringVar(&idpURL, "idp-url", "", "IDP URL")
-  loginCmd.Flags().StringVar(&idpClientID, "idp-client-id", "", "IDP client ID")
-  loginCmd.Flags().StringVar(&domainName, "domain-name", "", "OTC domain name")
-  loginCmd.Flags().StringVar(&authURL, "auth-url", "", "OTC IAM endpoint")
-  loginCmd.Flags().StringVar(&idpProviderName, "idp-provider", "", "IDP provider name")
-  loginCmd.Flags().StringVar(&region, "region", "", "Region")
-  loginCmd.Flags().IntVar(&redirectPort, "port", 9197, "Callback port")
-  loginCmd.Flags().StringVar(&outputFile, "output", "", "Output file")
-  loginCmd.Flags().BoolVar(&noBrowser, "no-browser", false, "Don't open browser automatically")
-  loginCmd.Flags().StringVar(&codeChallengeMethod, "code-challenge-method", "S256", "PKCE method (S256 or plain)")
-  loginCmd.Flags().StringVar(&scope, "scope", "openid email profile roles groups organization", "OIDC scopes")
+	// OIDC flags - use empty defaults
+	loginCmd.Flags().StringVar(&idpURL, "idp-url", "", "IDP URL")
+	loginCmd.Flags().StringVar(&idpClientID, "idp-client-id", "", "IDP client ID")
+	loginCmd.Flags().StringVar(&domainName, "domain-name", "", "OTC domain name")
+	loginCmd.Flags().StringVar(&authURL, "auth-url", "", "OTC IAM endpoint")
+	loginCmd.Flags().StringVar(&idpProviderName, "idp-provider", "", "IDP provider name")
+	loginCmd.Flags().StringVar(&region, "region", "", "Region")
+	loginCmd.Flags().IntVar(&redirectPort, "port", 9197, "Callback port")
+	loginCmd.Flags().StringVar(&outputFile, "output", "", "Output file")
+	loginCmd.Flags().BoolVar(&noBrowser, "no-browser", false, "Don't open browser automatically")
+	loginCmd.Flags().StringVar(&codeChallengeMethod, "code-challenge-method", "S256", "PKCE method (S256 or plain)")
+	loginCmd.Flags().StringVar(&scope, "scope", "openid email profile roles groups organization", "OIDC scopes")
 
-  // IAM flags - use empty defaults
-  loginCmd.Flags().BoolVar(&iamMode, "iam", false, "Use IAM direct authentication")
-  loginCmd.Flags().StringVar(&username, "username", "", "IAM username")
-  loginCmd.Flags().StringVar(&password, "password", "", "IAM password")
+	// IAM flags - use empty defaults
+	loginCmd.Flags().BoolVar(&iamMode, "iam", false, "Use IAM direct authentication")
+	loginCmd.Flags().StringVar(&username, "username", "", "IAM username")
+	loginCmd.Flags().StringVar(&password, "password", "", "IAM password")
 }
-
 
 func runLogin(cmd *cobra.Command, args []string) error {
 	cfg := buildConfig()
@@ -87,102 +86,102 @@ func runLogin(cmd *cobra.Command, args []string) error {
 }
 
 func buildConfig() *config.Config {
-  cfg := config.New()
-  
-  // Priority: flag > env var > config default
-  if idpURL != "" {
-    cfg.IdpURL = idpURL
-  } else if env := os.Getenv("IDP_URL"); env != "" {
-    cfg.IdpURL = env
-  }
-  
-  if idpClientID != "" {
-    cfg.IdpClientID = idpClientID
-  } else if env := os.Getenv("IDP_CLIENT_ID"); env != "" {
-    cfg.IdpClientID = env
-  }
-  
-  if domainName != "" {
-    cfg.DomainName = domainName
-  } else if env := os.Getenv("OS_DOMAIN_NAME"); env != "" {
-    cfg.DomainName = env
-  }
-  
-  if authURL != "" {
-    cfg.AUTHURL = authURL
-  } else if env := os.Getenv("OS_AUTH_URL"); env != "" {
-    cfg.AUTHURL = env
-  }
-  
-  if idpProviderName != "" {
-    cfg.IDPProviderName = idpProviderName
-  } else if env := os.Getenv("IDP_PROVIDER_NAME"); env != "" {
-    cfg.IDPProviderName = env
-  }
-  
-  if region != "" {
-    cfg.Region = region
-  } else if env := os.Getenv("OS_REGION_NAME"); env != "" {
-    cfg.Region = env
-  }
-  
-  if redirectPort == 9197 { // Check if still default
-    if portEnv := os.Getenv("REDIRECT_PORT"); portEnv != "" {
-      if port, err := strconv.Atoi(portEnv); err == nil {
-        cfg.RedirectPort = port
-      }
-    } else {
-      cfg.RedirectPort = redirectPort
-    }
-  } else {
-    cfg.RedirectPort = redirectPort
-  }
-  
-  if outputFile != "" {
-    cfg.OutputFile = outputFile
-  }
-  
-  if codeChallengeMethod != "" {
-    cfg.CodeChallengeMethod = codeChallengeMethod
-  }
-  
-  if scope != "" {
-    cfg.Scope = scope
-  }
-  
-  cfg.NoBrowser = noBrowser
+	cfg := config.New()
 
-  return cfg
+	// Priority: flag > env var > config default
+	if idpURL != "" {
+		cfg.IdpURL = idpURL
+	} else if env := os.Getenv("IDP_URL"); env != "" {
+		cfg.IdpURL = env
+	}
+
+	if idpClientID != "" {
+		cfg.IdpClientID = idpClientID
+	} else if env := os.Getenv("IDP_CLIENT_ID"); env != "" {
+		cfg.IdpClientID = env
+	}
+
+	if domainName != "" {
+		cfg.DomainName = domainName
+	} else if env := os.Getenv("OS_DOMAIN_NAME"); env != "" {
+		cfg.DomainName = env
+	}
+
+	if authURL != "" {
+		cfg.AUTHURL = authURL
+	} else if env := os.Getenv("OS_AUTH_URL"); env != "" {
+		cfg.AUTHURL = env
+	}
+
+	if idpProviderName != "" {
+		cfg.IDPProviderName = idpProviderName
+	} else if env := os.Getenv("IDP_PROVIDER_NAME"); env != "" {
+		cfg.IDPProviderName = env
+	}
+
+	if region != "" {
+		cfg.Region = region
+	} else if env := os.Getenv("OS_REGION_NAME"); env != "" {
+		cfg.Region = env
+	}
+
+	if redirectPort == 9197 { // Check if still default
+		if portEnv := os.Getenv("REDIRECT_PORT"); portEnv != "" {
+			if port, err := strconv.Atoi(portEnv); err == nil {
+				cfg.RedirectPort = port
+			}
+		} else {
+			cfg.RedirectPort = redirectPort
+		}
+	} else {
+		cfg.RedirectPort = redirectPort
+	}
+
+	if outputFile != "" {
+		cfg.OutputFile = outputFile
+	}
+
+	if codeChallengeMethod != "" {
+		cfg.CodeChallengeMethod = codeChallengeMethod
+	}
+
+	if scope != "" {
+		cfg.Scope = scope
+	}
+
+	cfg.NoBrowser = noBrowser
+
+	return cfg
 }
 
 func handleIAMLogin(cfg *config.Config) error {
-  // Priority: flag > env var > prompt
-  user := username
-  if user == "" {
-    user = os.Getenv("OS_USERNAME")
-  }
-  if user == "" {
-    user = commands.PromptUsername()
-  }
-  
-  pass := password
-  if pass == "" {
-    pass = os.Getenv("OS_PASSWORD")
-  }
-  if pass == "" {
-    pass = commands.PromptPassword()
-  }
+	// Priority: flag > env var > prompt
+	user := username
+	if user == "" {
+		user = os.Getenv("OS_USERNAME")
+	}
+	if user == "" {
+		user = commands.PromptUsername()
+	}
 
-  if user == "" || pass == "" {
-    return fmt.Errorf("username and password are required")
-  }
+	pass := password
+	if pass == "" {
+		pass = os.Getenv("OS_PASSWORD")
+	}
+	if pass == "" {
+		pass = commands.PromptPassword()
+	}
 
-  if err := commands.LoginIAM(cfg, user, pass); err != nil {
-    return err
-  }
+	if user == "" || pass == "" {
+		return fmt.Errorf("username and password are required")
+	}
 
-  color.Green("✓ Successfully authenticated with IAM")
-  return nil
+	if err := commands.LoginIAM(cfg, user, pass); err != nil {
+		return err
+	}
+
+	color.Green("✓ Successfully authenticated with IAM")
+	return nil
 }
 
 func handleOIDCLogin(cfg *config.Config) error {

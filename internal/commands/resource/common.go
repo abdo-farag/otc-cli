@@ -2,10 +2,10 @@ package resource
 
 import (
 	"fmt"
-	"io"
-	"net/http"
 	"github.com/abdo-farag/otc-cli/internal/config"
 	"github.com/abdo-farag/otc-cli/internal/otc"
+	"io"
+	"net/http"
 	"time"
 
 	"github.com/fatih/color"

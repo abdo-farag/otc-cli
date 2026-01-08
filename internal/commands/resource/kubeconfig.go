@@ -3,11 +3,11 @@ package resource
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/abdo-farag/otc-cli/internal/config"
+	"github.com/abdo-farag/otc-cli/internal/otc"
 	"io"
 	"net/http"
 	"os"
-	"github.com/abdo-farag/otc-cli/internal/config"
-	"github.com/abdo-farag/otc-cli/internal/otc"
 	"time"
 
 	"github.com/fatih/color"
@@ -23,8 +23,8 @@ func GetKubeconfig(cfg *config.Config, client *otc.Client, unscopedToken, projec
 
 	color.Yellow("⏳ Finding cluster...")
 
-	// First, list clusters to find by name if needed
-	cceURL := fmt.Sprintf("https://cce.%s.otc.t-systems.com/api/v3/projects/%s/clusters", cfg.Region, projectID)
+	// Use centralized CCE endpoint
+	cceURL := fmt.Sprintf("%s/api/v3/projects/%s/clusters", cfg.Endpoints.CCE, projectID)
 
 	req, _ := http.NewRequest("GET", cceURL, nil)
 	req.Header.Set("X-Auth-Token", projectToken)
@@ -58,10 +58,12 @@ func GetKubeconfig(cfg *config.Config, client *otc.Client, unscopedToken, projec
 
 	// Find cluster by name or ID
 	var clusterID string
+	var clusterName string
 	for _, c := range clusterList.Clusters {
 		if c.Metadata.UID == clusterNameOrID || c.Metadata.Name == clusterNameOrID {
 			clusterID = c.Metadata.UID
-			color.Cyan("✓ Found cluster: %s (%s)", c.Metadata.Name, clusterID)
+			clusterName = c.Metadata.Name
+			color.Cyan("✓ Found cluster: %s (%s)", clusterName, clusterID)
 			break
 		}
 	}
@@ -71,10 +73,10 @@ func GetKubeconfig(cfg *config.Config, client *otc.Client, unscopedToken, projec
 		return
 	}
 
-	// Get kubeconfig
+	// Get kubeconfig using centralized CCE endpoint
 	color.Yellow("⏳ Downloading kubeconfig...")
-	kubeconfigURL := fmt.Sprintf("https://cce.%s.otc.t-systems.com/api/v3/projects/%s/clusters/%s/clustercert",
-		cfg.Region, projectID, clusterID)
+	kubeconfigURL := fmt.Sprintf("%s/api/v3/projects/%s/clusters/%s/clustercert",
+		cfg.Endpoints.CCE, projectID, clusterID)
 
 	req2, _ := http.NewRequest("GET", kubeconfigURL, nil)
 	req2.Header.Set("X-Auth-Token", projectToken)

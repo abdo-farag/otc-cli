@@ -3,9 +3,9 @@ package resource
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 	"github.com/abdo-farag/otc-cli/internal/config"
 	"github.com/abdo-farag/otc-cli/internal/otc"
+	"strings"
 
 	"github.com/fatih/color"
 	"github.com/rodaine/table"
@@ -19,12 +19,12 @@ func ListImages(cfg *config.Config, client *otc.Client, unscopedToken, projectID
 		return
 	}
 
-	// Using IMS (Image Management Service) API for images
-	imageURL := fmt.Sprintf("https://ims.%s.otc.t-systems.com/v2/cloudimages", cfg.Region)
+	// Using IMS (Image Management Service) API for images with centralized endpoint
+	imageURL := fmt.Sprintf("%s/v2/cloudimages", cfg.Endpoints.IMS)
 
 	// Build query parameters for filtering
 	queryParams := []string{}
-	
+
 	// Filter by visibility (private/public/shared)
 	if visibility, ok := options["visibility"].(string); ok && visibility != "" {
 		if strings.EqualFold(visibility, "public") {
@@ -69,19 +69,19 @@ func ListImages(cfg *config.Config, client *otc.Client, unscopedToken, projectID
 
 	var result struct {
 		Images []struct {
-			ID              string `json:"id"`
-			Name            string `json:"name"`
-			Status          string `json:"status"`
-			MinDisk         int    `json:"min_disk"`
-			MinRAM          int    `json:"min_ram"`
-			DiskSize        int    `json:"disk_size"`
-			OsType          string `json:"__os_type"`
-			Platform        string `json:"__platform"`
-			ImageType       string `json:"__imagetype"`
-			Visibility      string `json:"visibility"`
-			OsVersion       string `json:"__os_version"`
-			SupportKvm      string `json:"__support_kvm"`
-			VirtualEnvType  string `json:"virtual_env_type"`
+			ID             string `json:"id"`
+			Name           string `json:"name"`
+			Status         string `json:"status"`
+			MinDisk        int    `json:"min_disk"`
+			MinRAM         int    `json:"min_ram"`
+			DiskSize       int    `json:"disk_size"`
+			OsType         string `json:"__os_type"`
+			Platform       string `json:"__platform"`
+			ImageType      string `json:"__imagetype"`
+			Visibility     string `json:"visibility"`
+			OsVersion      string `json:"__os_version"`
+			SupportKvm     string `json:"__support_kvm"`
+			VirtualEnvType string `json:"virtual_env_type"`
 		} `json:"images"`
 	}
 
@@ -94,19 +94,19 @@ func ListImages(cfg *config.Config, client *otc.Client, unscopedToken, projectID
 	images := result.Images
 	if nameFilter, ok := options["name"].(string); ok && nameFilter != "" {
 		var filtered []struct {
-			ID              string `json:"id"`
-			Name            string `json:"name"`
-			Status          string `json:"status"`
-			MinDisk         int    `json:"min_disk"`
-			MinRAM          int    `json:"min_ram"`
-			DiskSize        int    `json:"disk_size"`
-			OsType          string `json:"__os_type"`
-			Platform        string `json:"__platform"`
-			ImageType       string `json:"__imagetype"`
-			Visibility      string `json:"visibility"`
-			OsVersion       string `json:"__os_version"`
-			SupportKvm      string `json:"__support_kvm"`
-			VirtualEnvType  string `json:"virtual_env_type"`
+			ID             string `json:"id"`
+			Name           string `json:"name"`
+			Status         string `json:"status"`
+			MinDisk        int    `json:"min_disk"`
+			MinRAM         int    `json:"min_ram"`
+			DiskSize       int    `json:"disk_size"`
+			OsType         string `json:"__os_type"`
+			Platform       string `json:"__platform"`
+			ImageType      string `json:"__imagetype"`
+			Visibility     string `json:"visibility"`
+			OsVersion      string `json:"__os_version"`
+			SupportKvm     string `json:"__support_kvm"`
+			VirtualEnvType string `json:"virtual_env_type"`
 		}
 		for _, img := range images {
 			if strings.Contains(strings.ToLower(img.Name), strings.ToLower(nameFilter)) {
@@ -124,7 +124,7 @@ func ListImages(cfg *config.Config, client *otc.Client, unscopedToken, projectID
 
 	if len(images) == 0 {
 		color.Yellow("⚠ No images found matching the filters")
-		
+
 		// If filtered and no results, suggest trying without filters
 		if visibility, ok := options["visibility"].(string); ok && visibility != "" {
 			color.Cyan("\nTip: Try listing all images first to see what's available:")
@@ -156,7 +156,7 @@ func ListImages(cfg *config.Config, client *otc.Client, unscopedToken, projectID
 
 	fmt.Printf("\n")
 	color.Cyan("Project: %s", projectID)
-	
+
 	// Show active filters
 	if visibility, ok := options["visibility"].(string); ok && visibility != "" {
 		color.Yellow("Filter: Visibility = %s", visibility)
@@ -170,7 +170,7 @@ func ListImages(cfg *config.Config, client *otc.Client, unscopedToken, projectID
 	if name, ok := options["name"].(string); ok && name != "" {
 		color.Yellow("Filter: Name contains '%s'", name)
 	}
-	
+
 	tbl.Print()
 	fmt.Printf("\nTotal: %d images\n", len(images))
 }

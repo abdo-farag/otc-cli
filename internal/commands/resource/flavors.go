@@ -3,10 +3,10 @@ package resource
 import (
 	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
 	"github.com/abdo-farag/otc-cli/internal/config"
 	"github.com/abdo-farag/otc-cli/internal/otc"
+	"io"
+	"net/http"
 	"sort"
 	"strconv"
 	"strings"

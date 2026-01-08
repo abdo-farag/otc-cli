@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/abdo-farag/otc-cli/internal/config"
 	"io"
 	"net/http"
-	"github.com/abdo-farag/otc-cli/internal/config"
 	"time"
 
 	"github.com/fatih/color"

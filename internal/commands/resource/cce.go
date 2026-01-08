@@ -18,7 +18,7 @@ func ListCCE(cfg *config.Config, client *otc.Client, unscopedToken, projectID st
 		return
 	}
 
-	cceURL := fmt.Sprintf("https://cce.%s.otc.t-systems.com/api/v3/projects/%s/clusters", cfg.Region, projectID)
+	cceURL := fmt.Sprintf("%s/api/v3/projects/%s/clusters", cfg.Endpoints.CCE, projectID)
 
 	body, statusCode, err := MakeRequest(cceURL, projectToken)
 	if err != nil {
@@ -80,7 +80,7 @@ func GetCCE(cfg *config.Config, client *otc.Client, unscopedToken, projectID, re
 		return
 	}
 
-	cceURL := fmt.Sprintf("https://cce.%s.otc.t-systems.com/api/v3/projects/%s/clusters/%s", cfg.Region, projectID, resourceID)
+	cceURL := fmt.Sprintf("%s/api/v3/projects/%s/clusters/%s", cfg.Endpoints.CCE, projectID, resourceID)
 
 	body, statusCode, err := MakeRequest(cceURL, projectToken)
 	if err != nil {
