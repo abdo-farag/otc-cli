@@ -12,8 +12,9 @@ var (
 
 // Global flags
 var (
-	projectFlag string
-	rawFlag     bool
+  projectFlag string
+  rawFlag     bool
+  csvFlag     bool
 )
 
 // rootCmd represents the base command
@@ -32,10 +33,13 @@ func Execute() error {
 
 func init() {
 	// Persistent flags available to all subcommands
-	rootCmd.PersistentFlags().StringVarP(&projectFlag, "project", "p", "", "Project ID or name")
-	rootCmd.PersistentFlags().BoolVar(&rawFlag, "raw", false, "Output raw JSON response")
-	rootCmd.PersistentFlags().BoolVar(&rawFlag, "json", false, "Output raw JSON response (alias)")
-
+  rootCmd.PersistentFlags().StringVarP(&projectFlag, "project", "p", "", "Project ID or name")
+  rootCmd.PersistentFlags().BoolVar(&rawFlag, "raw", false, "Output raw JSON response")
+  rootCmd.PersistentFlags().BoolVar(&rawFlag, "json", false, "Output raw JSON response (alias)")
+  rootCmd.PersistentFlags().BoolVar(&csvFlag, "csv", false, "Output in CSV format")
+	
+	rootCmd.MarkFlagsMutuallyExclusive("raw", "csv")
+  rootCmd.MarkFlagsMutuallyExclusive("json", "csv")
 	// Add subcommands
 	rootCmd.AddCommand(loginCmd)
 	rootCmd.AddCommand(logoutCmd)

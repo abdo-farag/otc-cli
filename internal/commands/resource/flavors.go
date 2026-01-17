@@ -8,41 +8,12 @@ import (
 	"io"
 	"net/http"
 	"sort"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/fatih/color"
 	"github.com/rodaine/table"
 )
-
-// parsePrice extracts numeric value from price string
-func parsePrice(priceStr string) float64 {
-	parts := strings.Fields(priceStr)
-	if len(parts) > 0 {
-		if val, err := strconv.ParseFloat(parts[0], 64); err == nil {
-			return val
-		}
-	}
-	return 0.0
-}
-
-// extractVCPUCount extracts numeric vCPU value for sorting
-func extractVCPUCount(vCPUStr string) int {
-	val, _ := strconv.Atoi(strings.TrimSpace(vCPUStr))
-	return val
-}
-
-// extractRAMSize extracts numeric RAM value in GiB for sorting
-func extractRAMSize(ramStr string) float64 {
-	parts := strings.Fields(ramStr)
-	if len(parts) > 0 {
-		if val, err := strconv.ParseFloat(parts[0], 64); err == nil {
-			return val
-		}
-	}
-	return 0.0
-}
 
 // PricingInfo holds pricing data from OTC Price API
 type PricingInfo struct {
@@ -60,7 +31,7 @@ func FetchFlavorPricing(region string, osType string) (map[string]PricingInfo, e
 	pricing := make(map[string]PricingInfo)
 
 	// Query all service types: ecs, ecsnoc, gpu, deh
-	serviceNames := []string{"ecs", "ecsnoc", "memo", "uhio", "hps", "gpu", "deh", "dehl"}
+	serviceNames := []string{"ecs", "ecsnoc", "memo", "uhio", "hps", "gpu", "deh", "dehl", "dins", "lms"}
 
 	for _, serviceName := range serviceNames {
 		pricingURL := fmt.Sprintf("https://calculator.otc-service.com/en/open-telekom-price-api/?serviceName=%s&region=%s&limitMax=1000", serviceName, region)
