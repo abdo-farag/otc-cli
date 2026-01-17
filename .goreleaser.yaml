@@ -35,7 +35,6 @@ archives:
     files:
       - README.md
       - LICENSE
-      - otc-cli.md
 
 checksum:
   name_template: 'checksums.txt'
