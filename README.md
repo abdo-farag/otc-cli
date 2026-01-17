@@ -5,11 +5,15 @@ A command-line interface tool for Open Telekom Cloud (OTC) that provides seamles
 ## Features
 
 - 🔐 **Federated Authentication** - Login via OIDC/Keycloak SSO or IAM credentials
-- ⚡ **Temporary Credentials** - Generate 24-hour AWS-compatible credentials
+- ⚡ **Temporary Credentials** - Generate 24-hour AK/SK credentials
 - 🔄 **Token Caching** - Automatic token management and refresh
-- 📦 **Resource Management** - List and manage OTC resources
+- 📦 **Resource Management** - List and manage ECS, VPC, volumes, databases, and more
+- ☸️ **CCE Integration** - Get kubeconfig for Kubernetes clusters
+- 💰 **Pricing API** - Real-time pricing for 90+ OTC services with OS filtering
+- 📊 **Multiple Outputs** - Table, JSON, and CSV export formats
 - 🌐 **Multi-Project Support** - Work with multiple OTC projects
-- 🚀 **CCE Integration** - Get kubeconfig for Kubernetes clusters
+- 🖥️ **Remote Console** - Browser-based console access to ECS instances
+- 🔍 **Advanced Filtering** - Filter by status, AZ, tags, OS type, and more
 
 ## Installation
 
