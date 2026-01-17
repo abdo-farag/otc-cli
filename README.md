@@ -29,7 +29,7 @@ sudo mv otc-cli /usr/local/bin/
 ### Using Go Install
 
 ```bash
-go install github.com/abdo-farag/otc-cli@latest
+go install github.com/abdo-farag/otc-cli/cmd/otc-cli@latest
 ```
 
 ## Quick Start
