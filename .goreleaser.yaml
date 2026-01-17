@@ -13,9 +13,9 @@ builds:
       - CGO_ENABLED=0
     ldflags:
       - -s -w
-      - -X main.version={{.Version}}
-      - -X main.commit={{.Commit}}
-      - -X main.date={{.Date}}
+      - -X github.com/abdo-farag/otc-cli/cli.version={{.Version}}
+      - -X github.com/abdo-farag/otc-cli/cli.commit={{.Commit}}
+      - -X github.com/abdo-farag/otc-cli/cli.buildDate={{.Date}}
     ignore:
       - goos: windows
         goarch: arm64
